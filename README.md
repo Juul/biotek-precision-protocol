@@ -13,12 +13,20 @@ This will output the filename, then the checksum from the packet header and then
 
 The third byte of the first line is probably the command, where:
 
+* CF: Test comms / ping
 * E4: move axis
 * E7: home axis
-* DF: move Z axis fully down? used as first part of "remove tips" command
 * E2: move pipette plunger
 
 The four last bytes of the first line are probably two bytes for length of following message (little endian), then two bytes for checksum of following message.
+
+Unknown:
+
+* E2: Move pipette axis? used as second part of "remove tips" 
+* DF: move Z axis fully down? used as first part of "remove tips" and "home all axes"
+* CE: Used as second part of "home all axes". Has no data part
+* E7: Specifies the axis. Used once for each axis in "move to center" 
+
 
 ## Checksum
 
