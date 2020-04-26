@@ -42,6 +42,16 @@ function calc_mod(bytes) {
 
 }
 
+function toHex(arr) {
+  return arr.map((v) => {
+    v = v.toString(16);
+    if(v.length < 2) {
+      v = '0'+v;
+    }
+    return v;
+  }).join(' ');
+}
+
 function check_file(file) {
   console.log("file:", file);
   var packet = read(file);
@@ -50,10 +60,15 @@ function check_file(file) {
   var packetDiv = packet.header[packet.header.length-1];
   
   var sum = packet.data.reduce((cum, i) => {return cum + i});
+  var sum2 = packet.header.slice(0, 9).reduce((cum, i) => {return cum + i});
+  sum += sum2;
   
   var mod = sum % 255;
-  var div = Math.ceil(sum / 255);
-
+  var div = Math.floor(sum / 255);
+  mod = mod - div;
+  
+  console.log("  ", toHex(packet.header));
+  console.log("  ", toHex(packet.data));
   console.log("  [packet] mod:", packetMod.toString(16), "div:", packetDiv.toString(16));
 
   console.log("  [calced] mod:", mod.toString(16), "div:", div.toString(16));

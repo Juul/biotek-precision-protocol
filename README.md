@@ -22,9 +22,9 @@ The four last bytes of the first line are probably two bytes for length of follo
 
 ## Checksum
 
-It seems like the last byte of the checksum is the sum of all the data bytes divided by 255 and then rounded up to nearest integer. Or it could be the sum divided by 255 rounded down (throw away remainder) + 1.
+It seems like the last byte of the checksum is the sum of all the header and data bytes (except for the checksum) divided by 255.
 
-The first byte of the checksum is very close to the sum of the data bytes modulus 255, but it's often off by 1 or 2 in either direction! Sometimes it's completely off, like for `captures/move_to_center.LOG`.
+It seems like the first byte of the checksum is the remainder after the division with the second byte of the checksum subtracted.
 
 # Data line
 
