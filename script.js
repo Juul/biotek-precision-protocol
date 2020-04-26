@@ -63,9 +63,8 @@ function check_file(file) {
   var sum2 = packet.header.slice(0, 9).reduce((cum, i) => {return cum + i});
   sum += sum2;
   
-  var mod = sum % 255;
-  var div = Math.floor(sum / 255);
-  mod = mod - div;
+  var mod = sum % 256;
+  var div = Math.floor(sum / 256);
   
   console.log("  ", toHex(packet.header));
   console.log("  ", toHex(packet.data));

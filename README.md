@@ -30,9 +30,9 @@ Unknown:
 
 ## Checksum
 
-It seems like the last byte of the checksum is the sum of all the header and data bytes (except for the checksum) divided by 255.
+It seems like the last byte of the checksum is the sum of all the header and data bytes (except for the checksum) divided by 256.
 
-It seems like the first byte of the checksum is the remainder after the division with the second byte of the checksum subtracted.
+It seems like the first byte of the checksum is the remainder after the division.
 
 # Data line
 
