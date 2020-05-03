@@ -2,17 +2,7 @@
 
 const SerialPort = require('serialport');
 
-function calcChecksum(header, data) {
-  const headerSum = header.slice(0, 9).reduce((cum, i) => {return cum + i});
-  const dataSum = data.reduce((cum, i) => {return cum + i});
-  
-  const sum = headerSum + dataSum;
-  
-  const mod = sum % 256;
-  const div = Math.floor(sum / 256);
-
-  return Buffer.from([mod, div]);
-}
+const common = require('./common.js');
 
 function calcLength(data) {
   const buf = Buffer.alloc(2);
@@ -25,7 +15,7 @@ function command(cmd, data) {
   var header = Buffer.from([0x01, 0x02, cmd, 0x0b, 0x01, 0x01, 0x00]);
   
   header = Buffer.concat([header, calcLength(data)]);  
-  header = Buffer.concat([header, calcChecksum(header, data)]);
+  header = Buffer.concat([header, common.calcChecksum(header, data)]);
 
   return {
     data,
@@ -33,15 +23,11 @@ function command(cmd, data) {
   };
 }
 
-function move(axis, position, isAbs) {
+function move(axis, position) {
   const obscure = Buffer.from([0x00, 0x8c, 0x12, 0x00, 0xed, 0x8c, 0x77, 0x6b, 0xb9, 0x37, 0xba, 0x07, 0xfe, 0xff, 0xff, 0xff, 0x58]);
 
   var data = Buffer.from([axis, 0, 0, 0]);
-  if(!isAbs) {
-    data.writeInt16LE(position, 2);    
-  } else {
-    data.writeUInt16LE(position, 2);
-  }
+  data.writeInt16LE(position, 2);
   data = Buffer.concat([data, obscure]);
   
   return command(0xe4, data)
@@ -58,15 +44,15 @@ function openComms(device) {
 };
 
 function moveX(position) {
-  return move(1, position, true);
+  return move(1, position, false);
 }
 
 function moveY(position) {
-  return move(1, position, false);
+  return move(2, position, false);
 }
 
 function moveZ(position) {
-  return move(1, position, false);
+  return move(3, position, false);
 }
 
 function send(cmd) {
@@ -85,4 +71,6 @@ dev.on('data', function (data) {
 
 
 
-send(moveX(100));
+send(moveY(100));
+send(moveX(1000));
+send(moveZ(200));

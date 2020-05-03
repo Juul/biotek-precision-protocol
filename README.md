@@ -1,15 +1,30 @@
 
 In-progress reverse engineering attempt of BioTek Precision pipetting robot communication protocol.
 
-# Re-calculate checksums
-
-The `calc.js` script will parse the first command present in a log file and re-calculate the checksum.
+# Setup
 
 ```
-./calc.js <capture.LOG>
+npm install serialport
 ```
 
-This will output the filename, then the checksum from the packet header and then the calculated checksum.
+# Control pipetter
+
+Currently only moving the three axes is implemented. Try:
+
+```
+./move.js <serial port device>
+```
+
+Note that `moveX` takes an absolute position while `moveY` and `moveZ` takes relative positions.
+
+
+# Parse log files
+
+The directory `captures/` contains a bunch of captured serial data. You can parse this and display the output using:
+
+```
+./parse.js <capture.LOG>
+```
 
 # Header line
 
@@ -70,8 +85,6 @@ For all commands the following is static:
 ```
 [?? ?? ?? ?? ?? ?? 12 00]
 ```
-
-
 # Disclaimer
 
 I have no affiliation with BioTek. _Precision_ is probably a trademark of BioTek but the USPTO trademark search gives 4303 results for that word and I didn't feel like looking through them all to check.
