@@ -8,8 +8,10 @@ const commands = {
   0xCF: "Ping / Text communications",
   0xE4: "Move axis",
   0xE7: "Home axis",
-  0xE2: "Move pipette plunger",
-  0xDF: "Home all axes?"
+  0xE2: "Move pipette plunger?",
+  0xDF: "Seen before home all axes",
+  0xE5: "Seen before home all axes",
+  0xCE: "Home all axes?"
 };
 
 
@@ -91,10 +93,10 @@ function parse(lines, offset) {
   };
 }
 
-function printPacket(packet, nx) {
-  console.log('[header]', toHex(packet.header, nx))
+function printPacket(packet, nx, comma) {
+  console.log('[header]', toHex(packet.header, nx, comma))
   if(packet.data) {
-    console.log('[ data ]', toHex(packet.data, nx))
+    console.log('[ data ]', toHex(packet.data, nx, comma))
   }
 }
 
@@ -109,29 +111,30 @@ function read(file) {
   while(packet = parse(lines, packet.offset)) {
     console.log('-----------------------------------------');
     console.log(JSON.stringify(decode(packet), null, 2));
-    printPacket(packet);
+    printPacket(packet, true, true);
     console.log('');
   }
 }
 
-
-function toHex(arr, nx) {
-  if(typeof arr === 'number') {
-    arr = arr.toString(16);
-    if(arr.length < 2) {
-      arr = '0'+arr;
-    }
-    if(arr) arr = '0x'+arr;
-    return arr;
+function toHexSingle(v, nx) {
+  v = v.toString(16);
+  if(v.length < 2) {
+    v = '0'+v;
   }
+  if(nx) v = '0x'+v;
+  return v;
+}
+
+
+function toHex(arr, nx, comma) {
+  if(typeof arr === 'number') {
+    return toHexSingle(arr, nx, comma);
+  }
+  var joinChar = ' ';
+  if(comma) joinChar = ', '
   return arr.map((v) => {
-    v = v.toString(16);
-    if(v.length < 2) {
-      v = '0'+v;
-    }
-    if(nx) v = '0x'+v;
-    return v;
-  }).join(' ');
+    return toHexSingle(v, nx, comma);
+  }).join(joinChar);
 }
 
 function check_file(file) {

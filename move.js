@@ -33,6 +33,21 @@ function move(axis, position) {
   return command(0xe4, data)
 }
 
+function home(axis) {
+  const obscure = Buffer.from([0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x93, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe8, 0x03, 0x00, 0x00]);
+
+  axis = Buffer.from([axis]);
+  var data = Buffer.concat([axis, obscure]);
+  
+  return command(0xe7, data)
+}
+
+function odd() {
+  const obscure = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0xb9, 0x01, 0xad, 0xe1, 0xf9, 0x01, 0x14, 0xa2, 0xac, 0x6d, 0x24, 0x93, 0x12, 0x00, 0x24]);
+  
+  return command(0xe2, obscure)
+}
+
 function openComms(device) {
   const port = new SerialPort(device, {
     baudRate: 9600,
@@ -42,6 +57,18 @@ function openComms(device) {
   })
   return port
 };
+
+function homeX() {
+  return home(1);
+}
+
+function homeY() {
+  return home(2);
+}
+
+function homeZ() {
+  return home(3);
+}
 
 function moveX(position) {
   return move(1, position, false);
@@ -71,6 +98,18 @@ dev.on('data', function (data) {
 
 
 
-send(moveY(100));
-send(moveX(1000));
+//send(odd());
+//send(moveX(-200));
+//send(homeX());
+//setTimeout(function() {
+//  send(homeX());
+
+//}, 3000);
+//send(homeX());
+//send(homeY());
+
+
+send(moveY(-100));
+send(moveX(100));
 send(moveZ(200));
+
