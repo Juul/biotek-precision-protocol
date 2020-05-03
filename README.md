@@ -1,10 +1,12 @@
 
 In-progress reverse engineering attempt of BioTek Precision pipetting robot communication protocol.
 
-# Usage
+# Re-calculate checksums
+
+The `calc.js` script will parse the first command present in a log file and re-calculate the checksum.
 
 ```
-node ./script.js <capture.LOG>
+./calc.js <capture.LOG>
 ```
 
 This will output the filename, then the checksum from the packet header and then the calculated checksum.
@@ -53,6 +55,21 @@ For Z axis the number is a relative position. Positive means go down. Negative m
 For X axis the number is an absolute position. Positive means go right.
 
 For Y axis the number is also a relative position. Positive means go forward (toward the user).
+
+
+Move axis:
+
+```
+[axis 00 pos pos 00 8c 12 00 ed 8c 77 6b b9 37 ba 07 fe ff ff ff 58]
+```
+
+The question marks change depending on axis.
+
+For all commands the following is static:
+
+```
+[?? ?? ?? ?? ?? ?? 12 00]
+```
 
 
 # Disclaimer
