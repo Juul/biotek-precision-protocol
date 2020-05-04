@@ -89,3 +89,58 @@ For all commands the following is static:
 
 I have no affiliation with BioTek. _Precision_ is probably a trademark of BioTek but the USPTO trademark search gives 4303 results for that word and I didn't feel like looking through them all to check.
 
+# Notes
+
+[sent] <Buffer 01 02 e7 0b 01 01 00 14 00 f9 03>
+[header] 0x01, 0x02, 0xe7, 0x0b, 0x01, 0x01, 0x00, 0x14, 0x00, 0xf9, 0x03
+[sent] <Buffer 02 00 01 00 10 27 00 00 00 00 00 00 e8 03 00 00 25 dd c5 02>
+               02 00 01 00 10 27 00 00 00 00 00 00 e8 03 00 00 25 dd c5 02
+
+[ data ] 
+
+[header] 0x01, 0x02, 0xe7, 0x0b, 0x01, 0x01, 0x00, 0x14, 0x00, 0xf8, 0x03
+[ data ] 0x01, 0x00, 0x01, 0x00, 0x10, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe8, 0x03, 0x00, 0x00, 0x25, 0xdd, 0xc5, 0x02
+
+
+Notes on 0xe2 aka moveToOrigin:
+
+# byte 1
+
+## 0x00
+
+* X at origin (a bit right of leftmost detector)
+* Y all the way up
+
+## 0x01
+
+* X at second detector
+* Y all the way up
+
+## 0x02
+
+* X 2/3 to the right
+* Y all the way up
+
+## 0x03
+
+* X at origin
+* Y all the way down
+
+## 0x04
+
+* X at second detector
+* Y all the way down
+
+## 0x05
+
+* X 2/3 to the right
+* Y all the way down
+
+## 0x06 and higher
+
+* Crashes one or more axes by going too far
+
+# byte 4: pipetter
+
+* 0x01: up
+* 0x02: down (and get rid of tips

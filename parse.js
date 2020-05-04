@@ -6,12 +6,12 @@ const common = require('./common.js');
 
 const commands = {
   0xCF: "Ping / Text communications",
-  0xE4: "Move axis",
+  0xE2: "Axes to origin / drop pipettes", // verified
+  0xE4: "Move axis", // verified
   0xE7: "Home axis",
-  0xE2: "Move pipette plunger?",
   0xDF: "Seen before home all axes",
   0xE5: "Seen before home all axes",
-  0xCE: "Home all axes?"
+  0xCE: "Home all axes" // verified
 };
 
 
@@ -75,7 +75,11 @@ function parse(lines, offset) {
   var i, line;
   for(i=offset || 0; i < lines.length; i++) {
     line = lines[i];
-    if(!line.match("IRP_MJ_WRITE")) continue;
+    if(!line.trim()) continue;
+    if(!line.match("IRP_MJ_WRITE")) {
+      if(written.length) break;
+      continue;
+    }
     line = line.trim();
     fields = line.split(/\s+/);
     vals = fields.slice(8).map((s) => {return parseInt('0x'+s, 16)});
@@ -127,6 +131,7 @@ function toHexSingle(v, nx) {
 
 
 function toHex(arr, nx, comma) {
+  if(arr === null || arr === undefined) return 'null';
   if(typeof arr === 'number') {
     return toHexSingle(arr, nx, comma);
   }
